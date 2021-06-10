@@ -29,7 +29,9 @@
                         <td><?= $usuario['apellido_paterno']; ?></td>
                         <td><?= $usuario['apellido_materno']; ?></td>
                         <td><a href="<?=base_url('index.php/editUsuario/'. $usuario['correo']);?>" type="button" class="btn btn-success"><i class="far fa-edit"></i></a></td>
-                        <td><a href="<?=base_url('index.php/deleteUsuario/'. $usuario['correo']);?>" type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></a></td>
+                        <?php if($usuario['es_admin'] != 1): ?>
+                            <td><a href="<?=base_url('index.php/deleteUsuario/'. $usuario['correo']);?>" type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></a></td>
+                        <?php endif ?>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
