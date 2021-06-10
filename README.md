@@ -1,63 +1,69 @@
-# CodeIgniter 4 Application Starter
+# Crud de Usuarios
 
-## What is CodeIgniter?
+Crear el siguiente desarrollo utilizando el framework Codeigniter con PHP 7
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](http://codeigniter.com).
+1.	Crear CRUD (Crear, Mostrar, Editar, Borrar) usuario que tenga los siguientes parámetros
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+     a.	Nombre, apellido paterno y apellido Materno
+ 
+     b.	Correo (es el identificador único) 
 
-More information about the plans for version 4 can be found in [the announcement](http://forum.codeigniter.com/thread-62615.html) on the forums.
+     c.	Telefono
 
-The user guide corresponding to this version of the framework can be found
-[here](https://codeigniter4.github.io/userguide/).
+2.	Crear modelo físico de la base de datos
+3.	Login basado en correo y contraseña 
+4.	Validar campos
 
-## Installation & updates
+## Tecnologías
+El software está escrito en lenguaje PHP 7.4.12 hecho con el framework Codeigniter 4. El motor de base de datos utilizado en el desarrollo fue PHPMyAdmin, por lo que la base de datos está en lenguaje SQL.
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+## Configuración de arranque
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+El software se puede utilizar en Windows solo utilizando Xampp, mientras que si se quiere utilizar en Ubuntu/Linux se debería hacer un cambio en el archivo vendor\codeigniter4\framework\system\Codeigniter.php de la carpeta raíz del proyecto, el que es DESCOMENTAR la línea 184.
 
-## Setup
+Windows
+```php
+184 //locale_set_default($this->config->defaultLocale ?? 'en');
+```
+Ubuntu/Linux
+```php
+184 locale_set_default($this->config->defaultLocale ?? 'en');
+```
+No ha sido probado en macOS.
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+## Configuración Base de Datos
 
-## Important Change with index.php
+Para poder hacer la conexión a la base de datos se debe configurar el archivo ```app\config\Database.php``` de la carpeta raíz del proyecto en las líneas 36,37 y 38:
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+``` php
+       36  'username' => 'root',
+       37  'password' => 'password',
+       38  'database' => 'jorgeandrade',
+```
+ En la fila 36 se debe cambiar ```'root'``` por el nombre que tengas de usuario en tu PHPMyAdmin, al igual que el campo ```'password'``` donde va tu contraseña de PHPMyAdmin. En el campo ```''jorgeandrade''``` va el nombre de la base de datos a la cual quieras hacer la conexión.
+Con este archivo se incluye el archivo ```jorgeandrade SCRYT SQL``` que contiene la base de datos creada para ser importada en una base de datos vacía.
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+## Migraciones y Seeders
+Si no se quiso importar el archivo ```jorgeandrade SCRYPT SQL``` se pueden ejecutar migraciones para poder tener la base de datos lista para trabajar.
+El comando para ejecutar la migración ```2021-06-09-150339_CreateUsersMigration.php``` que se encuentra en la carpeta ```app\Database\Migrations``` es
+```bash
+php spark migrate
+```
+Luego, para poder tener un administrador agregado en la base de datos y hacer login se debe ejecutar el archivo ```UserSeeder.php``` que se encuentra en la carpeta ```app\Database\Seeds``` con el siguiente comando:
+```bash
+php spark db:seed UserSeeder
+```
 
-**Please** read the user guide for a better explanation of how CI4 works!
+Las credenciales del usuario que se crea son la siguientes:
 
-## Repository Management
+```bash
+'mail': 'jorge@jorge.com'
+'password': '123456789'
+```
 
-We use Github issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
-
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
-
-## Server Requirements
-
-PHP version 7.3 or higher is required, with the following extensions installed:
-
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
-
-Additionally, make sure that the following extensions are enabled in your PHP:
-
-- json (enabled by default - don't turn it off)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php)
-- xml (enabled by default - don't turn it off)
+## Cómo abordé el problema
+Después de crear el seeder estará el usuario ingresado en la base de datos. Este usuario es el único administrador del sistema, quien crea a los demas usuarios e ingresa sus datos.
+Los usuarios podrán hacer login pero solo podrán editar sus datos.
+Para eliminar a los usuarios solo lo podrá hacer el administrador (y este no se puede borrar así mismo ya que el software quedaría inutilizable).
+El administrador también puede editar los datos de los usuarios, pero no sus contraseñas.
+Los correos no dejé que sean cambiados ya que son las llaves foráneas y puede ocasionar problemas.
